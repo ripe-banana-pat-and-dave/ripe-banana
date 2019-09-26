@@ -36,4 +36,27 @@ describe('reviewer api', () => {
       );
     });
   });
+
+  it('gets a dude by id', () => {
+    return postReviewer(ebert).then(dude => {
+      return request
+        .get(`/api/reviewers/${dude._id}`)
+        .expect(200)
+        .then(({ body }) => {
+          return expect(body).toMatchInlineSnapshot(
+            {
+              _id: expect.any(String)
+            },
+            `
+                    Object {
+                      "__v": 0,
+                      "_id": Any<String>,
+                      "company": "At the Movies",
+                      "name": "Roger Ebert",
+                    }
+                  `
+          );
+        });
+    });
+  });
 });
