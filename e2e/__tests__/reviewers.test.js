@@ -40,12 +40,26 @@ describe('reviewer api', () => {
   it('gets a dude by id', () => {
     return postReviewer(ebert).then(dude => {
       return request
-        .get(`/api/reviewers/${dude._id}`)
+        .post('/api/reviews')
+        .send({
+          rating: 5,
+          review: `"Fight Club" A celebration of violence in which the heroes write themselves a license to drink, smoke, screw and beat one another up.`,
+          film: 0,
+          reviewer: dude._id
+        })
         .expect(200)
+        .then(() => {
+          return request.get(`/api/reviewers/${dude._id}`).expect(200);
+        })
         .then(({ body }) => {
           return expect(body).toMatchInlineSnapshot(
             {
-              _id: expect.any(String)
+              _id: expect.any(String),
+              reviews: [
+                {
+                  _id: expect.any(String)
+                }
+              ]
             },
             `
                     Object {
@@ -53,13 +67,20 @@ describe('reviewer api', () => {
                       "_id": Any<String>,
                       "company": "At the Movies",
                       "name": "Roger Ebert",
+                      "reviews": Array [
+                        Object {
+                          "_id": Any<String>,
+                          "rating": 5,
+                          "review": "\\"Fight Club\\" A celebration of violence in which the heroes write themselves a license to drink, smoke, screw and beat one another up.",
+                        },
+                      ],
                     }
                   `
           );
         });
     });
   });
-  
+
   it('modifies a dude by id', () => {
     return postReviewer(ebert).then(dude => {
       return request
@@ -85,5 +106,4 @@ describe('reviewer api', () => {
         });
     });
   });
-  
 });
