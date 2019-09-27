@@ -51,4 +51,35 @@ describe('review api routes', () => {
       );
     });
   });
+
+  it('gets a list of reviews', () => {
+    return Promise.all([
+      postReview(fightClub),
+      postReview(fightClub),
+      postReview(fightClub),
+      postReview(fightClub)
+    ])
+      .then(() => {
+        return request.get('/api/reviews').expect(200);
+      })
+      .then(({ body }) => {
+        expect(body.length).toBe(4);
+        expect(body[0]).toMatchInlineSnapshot(
+          {
+            _id: expect.any(String),
+            reviewer: expect.any(String)
+          },
+          `
+          Object {
+            "__v": 0,
+            "_id": Any<String>,
+            "film": 0,
+            "rating": 5,
+            "review": "\\"Fight Club\\" A celebration of violence in which the heroes write themselves a license to drink, smoke, screw and beat one another up.",
+            "reviewer": Any<String>,
+          }
+        `
+        );
+      });
+  });
 });
