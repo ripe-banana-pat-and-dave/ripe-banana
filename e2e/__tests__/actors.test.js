@@ -62,4 +62,30 @@ describe('actor api', () => {
         });
     });
   });
+
+  it('gets a list of actors', () => {
+    return Promise.all([
+      postActor(ed),
+      postActor(ed),
+      postActor(ed),
+      postActor(ed)
+    ])
+      .then(() => {
+        return request.get('/api/actors').expect(200);
+      })
+      .then(({ body }) => {
+        expect(body.length).toBe(4);
+        expect(body[0]).toMatchInlineSnapshot(
+          {
+            _id: expect.any(String)
+          },
+          `
+          Object {
+            "_id": Any<String>,
+            "name": "Edward Norton",
+          }
+        `
+        );
+      });
+  });
 });
