@@ -59,4 +59,31 @@ describe('reviewer api', () => {
         });
     });
   });
+  
+  it('modifies a dude by id', () => {
+    return postReviewer(ebert).then(dude => {
+      return request
+        .put(`/api/reviewers/${dude._id}`)
+        .send({
+          company: 'www.ebertpresents.com'
+        })
+        .expect(200)
+        .then(({ body }) => {
+          return expect(body).toMatchInlineSnapshot(
+            {
+              _id: expect.any(String)
+            },
+            `
+                    Object {
+                      "__v": 0,
+                      "_id": Any<String>,
+                      "company": "www.ebertpresents.com",
+                      "name": "Roger Ebert",
+                    }
+                  `
+          );
+        });
+    });
+  });
+  
 });
