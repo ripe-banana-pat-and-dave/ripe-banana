@@ -8,16 +8,26 @@ describe('review api routes', () => {
 
   const fightClub = {
     rating: 5,
-    reviewer: 'Roger Ebert',
     review: `"Fight Club" A celebration of violence in which the heroes write themselves a license to drink, smoke, screw and beat one another up.`,
     film: 0
+  };
+  const ebert = {
+    name: 'Roger Ebert',
+    company: 'At the Movies'
   };
 
   function postReview(review) {
     return request
-      .post('/api/reviews')
-      .send(review)
+      .post('/api/reviewers')
+      .send(ebert)
       .expect(200)
+      .then(({ body }) => {
+        review.reviewer = body._id;
+        return request
+          .post('/api/reviews')
+          .send(review)
+          .expect(200);
+      })
       .then(({ body }) => body);
   }
 
@@ -25,7 +35,8 @@ describe('review api routes', () => {
     return postReview(fightClub).then(review => {
       expect(review).toMatchInlineSnapshot(
         {
-          _id: expect.any(String)
+          _id: expect.any(String),
+          reviewer: expect.any(String)
         },
         `
         Object {
@@ -34,7 +45,7 @@ describe('review api routes', () => {
           "film": 0,
           "rating": 5,
           "review": "\\"Fight Club\\" A celebration of violence in which the heroes write themselves a license to drink, smoke, screw and beat one another up.",
-          "reviewer": "Roger Ebert",
+          "reviewer": Any<String>,
         }
       `
       );
