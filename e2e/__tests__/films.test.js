@@ -86,19 +86,4 @@ describe('film api routes', () => {
     });
   });
 
-  it.skip('gets a list of reviews', () => {
-    return Promise.all([
-      postReview(fightClub),
-      postReview(fightClub),
-      postReview(fightClub),
-      postReview(fightClub)
-    ])
-      .then(() => {
-        return request.get('/api/reviews').expect(200);
-      })
-      .then(({ body }) => {
-        expect(body.length).toBe(4);
-        expect(body[0]).toMatchInlineSnapshot();
-      });
-  });
 });

@@ -44,7 +44,6 @@ describe('reviewer api', () => {
         .send({
           rating: 5,
           review: `"Fight Club" A celebration of violence in which the heroes write themselves a license to drink, smoke, screw and beat one another up.`,
-          film: 0,
           reviewer: dude._id
         })
         .expect(200)
