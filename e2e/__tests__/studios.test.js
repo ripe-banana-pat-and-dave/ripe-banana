@@ -53,10 +53,7 @@ describe('studio api', () => {
   });
 
   it('gets a list of studios', () => {
-    return Promise.all([
-      postStudio(house),
-      postStudio(house)
-    ])
+    return Promise.all([postStudio(house), postStudio(house)])
       .then(() => {
         return request.get('/api/studios').expect(200);
       })
@@ -111,6 +108,41 @@ describe('studio api', () => {
           `
           );
         });
+    });
+  });
+
+  it('deletes an studio by id', () => {
+    return postStudio(house).then(studio => {
+      return request
+        .delete(`/api/studios/${studio._id}`)
+        .expect(200)
+        .then(({ body }) => {
+          expect(body).toMatchInlineSnapshot(
+            {
+              _id: expect.any(String)
+            },
+            `
+            Object {
+              "__v": 0,
+              "_id": Any<String>,
+              "address": Object {
+                "city": "Los Angeles",
+                "country": "USA",
+                "state": "CA",
+              },
+              "name": "Warner Bros. Studio",
+            }
+          `
+          );
+        });
+    });
+  });
+
+  it('does not delete a studio by id, if there are dependencies', () => {
+    return postFilm(ed, house, fightClub).then(film => {
+      return request
+        .delete(`/api/studios/${film.studio}`)
+        .expect(400);
     });
   });
 });
