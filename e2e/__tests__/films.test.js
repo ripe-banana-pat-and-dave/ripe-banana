@@ -177,4 +177,42 @@ describe('film api routes', () => {
       }
     );
   });
+
+  it('deletes a film by id', () => {
+    return postFilm(ed, house, fightClub).then(film => {
+      return request
+        .delete(`/api/films/${film._id}`)
+        .expect(200)
+        .then(({ body }) => {
+          expect(body).toMatchInlineSnapshot(
+            {
+              _id: expect.any(String),
+              studio: expect.any(String),
+              cast: [
+                {
+                  _id: expect.any(String),
+                  actor: expect.any(String)
+                }
+              ]
+            },
+            `
+            Object {
+              "__v": 0,
+              "_id": Any<String>,
+              "cast": Array [
+                Object {
+                  "_id": Any<String>,
+                  "actor": Any<String>,
+                  "role": "The Narrator",
+                },
+              ],
+              "released": 1999,
+              "studio": Any<String>,
+              "title": "Fight Club",
+            }
+          `
+          );
+        });
+    });
+  });
 });
