@@ -100,7 +100,7 @@ describe('review api routes', () => {
     });
   });
 
-  it.skip('gets a list of reviews', () => {
+  it('gets a list of reviews', () => {
     return Promise.all([
       postReview(fightClubReview),
       postReview(fightClubReview),
@@ -115,12 +115,14 @@ describe('review api routes', () => {
         expect(body[0]).toMatchInlineSnapshot(
           {
             _id: expect.any(String),
-            reviewer: expect.any(String)
+            reviewer: expect.any(String),
+            film: expect.any(String)
           },
           `
           Object {
             "__v": 0,
             "_id": Any<String>,
+            "film": Any<String>,
             "rating": 5,
             "review": "\\"Fight Club\\" A celebration of violence in which the heroes write themselves a license to drink, smoke, screw and beat one another up.",
             "reviewer": Any<String>,
