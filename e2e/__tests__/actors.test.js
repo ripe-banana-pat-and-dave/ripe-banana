@@ -1,5 +1,6 @@
 const request = require('../request');
 const db = require('../db');
+const { postActor } = require('../tests-setup');
 
 describe('actor api', () => {
   beforeEach(() => {
@@ -11,14 +12,6 @@ describe('actor api', () => {
     dob: 'August 18, 1969',
     pob: 'Boston, Massachusetts'
   };
-
-  function postActor(dude) {
-    return request
-      .post('/api/actors')
-      .send(dude)
-      .expect(200)
-      .then(({ body }) => body);
-  }
 
   it('post a dude', () => {
     return postActor(ed).then(dude => {

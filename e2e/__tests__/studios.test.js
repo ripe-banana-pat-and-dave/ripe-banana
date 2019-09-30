@@ -1,5 +1,6 @@
 const request = require('../request');
 const db = require('../db');
+const { postStudio } = require('../tests-setup');
 
 describe('studio api', () => {
   beforeEach(() => {
@@ -14,14 +15,6 @@ describe('studio api', () => {
       country: 'USA'
     }
   };
-
-  function postStudio(house) {
-    return request
-      .post('/api/studios')
-      .send(house)
-      .expect(200)
-      .then(({ body }) => body);
-  }
 
   it('post a house', () => {
     return postStudio(house).then(house => {

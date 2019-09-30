@@ -1,5 +1,6 @@
 const request = require('../request');
 const db = require('../db');
+const { postReviewer } = require('../tests-setup');
 
 describe('reviewer api', () => {
   beforeEach(() => {
@@ -10,14 +11,6 @@ describe('reviewer api', () => {
     name: 'Roger Ebert',
     company: 'At the Movies'
   };
-
-  function postReviewer(dude) {
-    return request
-      .post('/api/reviewers')
-      .send(dude)
-      .expect(200)
-      .then(({ body }) => body);
-  }
 
   it('post a dude', () => {
     return postReviewer(ebert).then(dude => {

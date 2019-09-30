@@ -1,5 +1,6 @@
 const request = require('../request');
 const db = require('../db');
+const { postReview } = require('../tests-setup');
 
 describe('review api routes', () => {
   beforeEach(() => {
@@ -36,50 +37,9 @@ describe('review api routes', () => {
       }
     ]
   };
-
-  function postReview(review) {
-    return request
-      .post('/api/actors')
-      .send(ed)
-      .expect(200)
-      .then(({ body }) => {
-        fightClub.cast[0].actor = body._id;
-        return request
-          .post('/api/studios')
-          .send(house)
-          .expect(200)
-          .then(({ body }) => {
-            fightClub.studio = body._id;
-            return request
-              .post('/api/reviewers')
-              .send(ebert)
-              .expect(200)
-              .then(({ body }) => {
-                review.reviewer = body._id;
-                return request
-                  .post('/api/films')
-                  .send(fightClub)
-                  .expect(200)
-                  .then(({ body }) => {
-                    console.log('Before post "reviews"');
-                    console.log(body);
-                    review.film = body._id;
-                    return request
-                      .post('/api/reviews')
-                      .send(review)
-                      .expect(200);
-                  });
-              });
-          });
-      })
-      .then(({ body }) => {
-        console.log(body);
-        return body;
-      });
-  }
-
+  
   it('posts a review', () => {
-    return postReview(fightClubReview).then(review => {
+    return postReview(ed, house, ebert, fightClub, fightClubReview).then(review => {
       expect(review).toMatchInlineSnapshot(
         {
           _id: expect.any(String),
@@ -102,10 +62,10 @@ describe('review api routes', () => {
 
   it('gets a list of reviews', () => {
     return Promise.all([
-      postReview(fightClubReview),
-      postReview(fightClubReview),
-      postReview(fightClubReview),
-      postReview(fightClubReview)
+      postReview(ed, house, ebert, fightClub, fightClubReview),
+      postReview(ed, house, ebert, fightClub, fightClubReview),
+      postReview(ed, house, ebert, fightClub, fightClubReview),
+      postReview(ed, house, ebert, fightClub, fightClubReview)
     ])
       .then(() => {
         return request.get('/api/reviews').expect(200);
