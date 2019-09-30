@@ -111,7 +111,7 @@ describe('studio api', () => {
     });
   });
 
-  it('deletes an studio by id', () => {
+  it('deletes a studio by id', () => {
     return postStudio(house).then(studio => {
       return request
         .delete(`/api/studios/${studio._id}`)
@@ -138,11 +138,20 @@ describe('studio api', () => {
     });
   });
 
-  it('does not delete a studio by id, if there are dependencies', () => {
+  it('does not delete a studio when the studio owns a film', () => {
     return postFilm(ed, house, fightClub).then(film => {
       return request
         .delete(`/api/studios/${film.studio}`)
-        .expect(400);
+        .expect(400)
+        .then(({ body }) => {
+          expect(body).toMatchInlineSnapshot(`
+            Object {
+              "error": "Cannot remove studio",
+            }
+          `);
+        });
     });
   });
+
+
 });

@@ -85,10 +85,7 @@ describe('actor api', () => {
   });
 
   it('gets a list of actors', () => {
-    return Promise.all([
-      postActor(ed),
-      postActor(ed)
-    ])
+    return Promise.all([postActor(ed), postActor(ed)])
       .then(() => {
         return request.get('/api/actors').expect(200);
       })
@@ -106,5 +103,44 @@ describe('actor api', () => {
         `
         );
       });
+  });
+
+  it('deletes an actor by id', () => {
+    return postActor(ed).then(actor => {
+      return request
+        .delete(`/api/actors/${actor._id}`)
+        .expect(200)
+        .then(({ body }) => {
+          expect(body).toMatchInlineSnapshot(
+            {
+              _id: expect.any(String)
+            },
+            `
+            Object {
+              "__v": 0,
+              "_id": Any<String>,
+              "dob": "1969-08-18T07:00:00.000Z",
+              "name": "Edward Norton",
+              "pob": "Boston, Massachusetts",
+            }
+          `
+          );
+        });
+    });
+  });
+
+  it('does not delete an actor who is currently in a film', () => {
+    return postFilm(ed, house, fightClub).then(film => {
+      return request
+        .delete(`/api/actors/${film.cast[0].actor}`)
+        .expect(400)
+        .then(({ body }) => {
+          expect(body).toMatchInlineSnapshot(`
+            Object {
+              "error": "Cannot remove actor",
+            }
+          `);
+        });
+    });
   });
 });
