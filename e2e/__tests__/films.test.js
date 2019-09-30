@@ -118,21 +118,26 @@ describe('film api routes', () => {
           .get(`/api/films/${review.film}`)
           .expect(200)
           .then(({ body }) => {
-            console.log(body);
             expect(body).toMatchInlineSnapshot(
               {
                 _id: expect.any(String),
-                studio: expect.any(String),
+                studio: {
+                  _id: expect.any(String)
+                },
                 cast: [
                   {
                     _id: expect.any(String),
-                    actor: expect.any(String)
+                    actor: {
+                      _id: expect.any(String)
+                    }
                   }
                 ],
                 reviews: [
                   {
                     _id: expect.any(String),
-                    reviewer: expect.any(String)
+                    reviewer: {
+                      _id: expect.any(String)
+                    }
                   }
                 ]
               },
@@ -143,7 +148,10 @@ describe('film api routes', () => {
                 "cast": Array [
                   Object {
                     "_id": Any<String>,
-                    "actor": Any<String>,
+                    "actor": Object {
+                      "_id": Any<String>,
+                      "name": "Edward Norton",
+                    },
                     "role": "The Narrator",
                   },
                 ],
@@ -151,10 +159,16 @@ describe('film api routes', () => {
                 "reviews": Array [
                   Object {
                     "_id": Any<String>,
-                    "reviewer": Any<String>,
+                    "reviewer": Object {
+                      "_id": Any<String>,
+                      "name": "Roger Ebert",
+                    },
                   },
                 ],
-                "studio": Any<String>,
+                "studio": Object {
+                  "_id": Any<String>,
+                  "name": "Warner Bros. Studio",
+                },
                 "title": "Fight Club",
               }
             `

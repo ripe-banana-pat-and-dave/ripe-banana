@@ -40,7 +40,6 @@ function postReview(actor, house, reviewer, film, review) {
         .expect(200)
         .then(({ body }) => {
           review.film = body._id;
-          console.log(review);
           return request
             .post('/api/reviews')
             .send(review)
