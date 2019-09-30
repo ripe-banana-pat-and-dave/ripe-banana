@@ -63,14 +63,13 @@ describe('review api routes', () => {
   it('gets a list of reviews', () => {
     return Promise.all([
       postReview(ed, house, ebert, fightClub, fightClubReview),
-      postReview(ed, house, ebert, fightClub, fightClubReview),
       postReview(ed, house, ebert, fightClub, fightClubReview)
     ])
       .then(() => {
         return request.get('/api/reviews').expect(200);
       })
       .then(({ body }) => {
-        expect(body.length).toBe(3);
+        expect(body.length).toBe(2);
         expect(body[0]).toMatchInlineSnapshot(
           {
             _id: expect.any(String),
