@@ -66,14 +66,13 @@ describe('film api routes', () => {
   it('it gets films', () => {
     return Promise.all([
       postFilm(ed, house, fightClub),
-      postFilm(ed, house, fightClub),
       postFilm(ed, house, fightClub)
     ])
       .then(() => {
         return request.get('/api/films').expect(200);
       })
       .then(({ body }) => {
-        expect(body.length).toBe(3);
+        expect(body.length).toBe(2);
         expect(body[0]).toMatchInlineSnapshot(
           {
             _id: expect.any(String),

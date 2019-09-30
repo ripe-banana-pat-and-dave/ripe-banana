@@ -51,15 +51,18 @@ describe('actor api', () => {
 
   it('gets an actor by id', () => {
     return postFilm(ed, house, fightClub).then(film => {
-      console.log(film.cast[0].actor);
       return request
         .get(`/api/actors/${film.cast[0].actor}`)
         .expect(200)
         .then(({ body }) => {
-          console.log(body);
           expect(body).toMatchInlineSnapshot(
             {
-              _id: expect.any(String)
+              _id: expect.any(String),
+              films: [
+                {
+                  _id: expect.any(String)
+                }
+              ]
             },
             `
             Object {
@@ -68,7 +71,7 @@ describe('actor api', () => {
               "dob": "1969-08-18T07:00:00.000Z",
               "films": Array [
                 Object {
-                  "_id": "5d92405be8053f092012a6fc",
+                  "_id": Any<String>,
                   "title": "Fight Club",
                 },
               ],
