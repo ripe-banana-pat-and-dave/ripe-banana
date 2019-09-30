@@ -1,6 +1,6 @@
 const request = require('../request');
 const db = require('../db');
-const { postActor } = require('../tests-setup');
+const { postActor, postFilm } = require('../tests-setup');
 
 describe('actor api', () => {
   beforeEach(() => {
@@ -11,6 +11,23 @@ describe('actor api', () => {
     name: 'Edward Norton',
     dob: 'August 18, 1969',
     pob: 'Boston, Massachusetts'
+  };
+  const house = {
+    name: 'Warner Bros. Studio',
+    address: {
+      city: 'Los Angeles',
+      state: 'CA',
+      country: 'USA'
+    }
+  };
+  const fightClub = {
+    title: 'Fight Club',
+    released: 1999,
+    cast: [
+      {
+        role: 'The Narrator'
+      }
+    ]
   };
 
   it('post a dude', () => {
@@ -33,11 +50,13 @@ describe('actor api', () => {
   });
 
   it('gets an actor by id', () => {
-    return postActor(ed).then(dude => {
+    return postFilm(ed, house, fightClub).then(film => {
+      console.log(film.cast[0].actor);
       return request
-        .get(`/api/actors/${dude._id}`)
+        .get(`/api/actors/${film.cast[0].actor}`)
         .expect(200)
         .then(({ body }) => {
+          console.log(body);
           expect(body).toMatchInlineSnapshot(
             {
               _id: expect.any(String)
@@ -47,6 +66,12 @@ describe('actor api', () => {
               "__v": 0,
               "_id": Any<String>,
               "dob": "1969-08-18T07:00:00.000Z",
+              "films": Array [
+                Object {
+                  "_id": "5d92405be8053f092012a6fc",
+                  "title": "Fight Club",
+                },
+              ],
               "name": "Edward Norton",
               "pob": "Boston, Massachusetts",
             }

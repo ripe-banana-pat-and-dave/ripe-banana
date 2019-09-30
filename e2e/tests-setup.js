@@ -39,8 +39,6 @@ function postReview(actor, house, reviewer, film, review) {
         .send(film)
         .expect(200)
         .then(({ body }) => {
-          console.log('Before post "reviews"');
-          console.log(body);
           review.film = body._id;
           return request
             .post('/api/reviews')
@@ -49,9 +47,26 @@ function postReview(actor, house, reviewer, film, review) {
         });
     })
     .then(({ body }) => {
-      console.log(body);
+      return body;
+    });
+}
+
+function postFilm(actor, house, film) {
+  return Promise.all([
+    postActor(actor),
+    postStudio(house)
+  ])
+    .then(([actorBody, studioBody])=> {
+      film.cast[0].actor = actorBody._id;
+      film.studio = studioBody._id;
+      return request
+        .post('/api/films')
+        .send(film)
+        .expect(200);
+    })
+    .then(({ body }) => {
       return body;
     });
 }
     
-module.exports = { postActor, postReview, postReviewer, postStudio };
+module.exports = { postActor, postReview, postReviewer, postStudio, postFilm };
