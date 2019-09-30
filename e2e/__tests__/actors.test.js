@@ -34,13 +34,14 @@ describe('actor api', () => {
     return postActor(ed).then(dude => {
       expect(dude).toMatchInlineSnapshot(
         {
-          _id: expect.any(String)
+          _id: expect.any(String),
+          dob: expect.any(String)
         },
         `
         Object {
           "__v": 0,
           "_id": Any<String>,
-          "dob": "1969-08-18T07:00:00.000Z",
+          "dob": Any<String>,
           "name": "Edward Norton",
           "pob": "Boston, Massachusetts",
         }
@@ -58,6 +59,7 @@ describe('actor api', () => {
           expect(body).toMatchInlineSnapshot(
             {
               _id: expect.any(String),
+              dob: expect.any(String),
               films: [
                 {
                   _id: expect.any(String)
@@ -68,7 +70,7 @@ describe('actor api', () => {
             Object {
               "__v": 0,
               "_id": Any<String>,
-              "dob": "1969-08-18T07:00:00.000Z",
+              "dob": Any<String>,
               "films": Array [
                 Object {
                   "_id": Any<String>,
@@ -113,13 +115,14 @@ describe('actor api', () => {
         .then(({ body }) => {
           expect(body).toMatchInlineSnapshot(
             {
-              _id: expect.any(String)
+              _id: expect.any(String),
+              dob: expect.any(String)
             },
             `
             Object {
               "__v": 0,
               "_id": Any<String>,
-              "dob": "1969-08-18T07:00:00.000Z",
+              "dob": Any<String>,
               "name": "Edward Norton",
               "pob": "Boston, Massachusetts",
             }
