@@ -1,6 +1,6 @@
 const request = require('../request');
 const db = require('../db');
-const { postFilm } = require('../tests-setup');
+const { postFilm, postReview } = require('../tests-setup');
 
 describe('film api routes', () => {
   beforeEach(() => {
@@ -19,6 +19,14 @@ describe('film api routes', () => {
       state: 'CA',
       country: 'USA'
     }
+  };
+  const fightClubReview = {
+    rating: 5,
+    review: `"Fight Club" A celebration of violence in which the heroes write themselves a license to drink, smoke, screw and beat one another up.`
+  };
+  const ebert = {
+    name: 'Roger Ebert',
+    company: 'At the Movies'
   };
   const fightClub = {
     title: 'Fight Club',
@@ -62,7 +70,7 @@ describe('film api routes', () => {
       );
     });
   });
-  
+
   it('it gets films', () => {
     return Promise.all([
       postFilm(ed, house, fightClub),
@@ -103,5 +111,56 @@ describe('film api routes', () => {
         );
       });
   });
-  
+  it('it gets film by id', () => {
+    return postReview(ed, house, ebert, fightClub, fightClubReview).then(
+      review => {
+        return request
+          .get(`/api/films/${review.film}`)
+          .expect(200)
+          .then(({ body }) => {
+            console.log(body);
+            expect(body).toMatchInlineSnapshot(
+              {
+                _id: expect.any(String),
+                studio: expect.any(String),
+                cast: [
+                  {
+                    _id: expect.any(String),
+                    actor: expect.any(String)
+                  }
+                ],
+                reviews: [
+                  {
+                    _id: expect.any(String),
+                    reviewer: expect.any(String)
+                  }
+                ]
+              },
+              `
+              Object {
+                "__v": 0,
+                "_id": Any<String>,
+                "cast": Array [
+                  Object {
+                    "_id": Any<String>,
+                    "actor": Any<String>,
+                    "role": "The Narrator",
+                  },
+                ],
+                "released": 1999,
+                "reviews": Array [
+                  Object {
+                    "_id": Any<String>,
+                    "reviewer": Any<String>,
+                  },
+                ],
+                "studio": Any<String>,
+                "title": "Fight Club",
+              }
+            `
+            );
+          });
+      }
+    );
+  });
 });

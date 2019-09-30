@@ -80,7 +80,6 @@ describe('studio api', () => {
 
   it('gets an studio by id', () => {
     return postFilm(ed, house, fightClub).then(film => {
-      console.log(film);
       return request
         .get(`/api/studios/${film.studio}`)
         .expect(200)
